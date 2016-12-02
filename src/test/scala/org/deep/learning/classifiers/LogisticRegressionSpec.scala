@@ -4,9 +4,9 @@ import org.scalatest.{FlatSpec, Matchers, OptionValues}
 
 class LogisticRegressionSpec extends FlatSpec with Matchers with OptionValues {
 
-  val dataRows: List[List[Double]] = List(List(1, 2), List(0, -1), List(1, 3), List(0, -2), List(1, 4))
-  val seedWeights: List[Double] = List(1, 0)
-  val learningRate: Double = 0.000001
+  val dataRows: List[List[BigDecimal]] = List(List(1, 2), List(0, -1), List(1, 3), List(0, -2), List(1, 4))
+  val seedWeights: List[BigDecimal] = List(1, 0)
+  val learningRate: BigDecimal = 0.000001
   val maxIterations: Int = 2000
 
   behavior of "LogisticRegression.scala"
