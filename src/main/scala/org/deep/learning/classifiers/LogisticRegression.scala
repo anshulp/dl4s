@@ -34,21 +34,25 @@ class LogisticRegression(
   //TODO: Add tolerance (predictedLabel - actualLabel) > tolerance, break the training loop
 
   private val learnedWeights: List[BigDecimal] = {
-    // learn till maxIteration
+     // learn till maxIteration
       // for each feature/label combination
-    (0 to maxIterations-1).foldLeft(seedWeights) {(weights, iter) => {
-      (0 to features.size - 1).foldLeft(seedWeights) { (weights, featureIndex) => {
+      (0 to (features.size - 1) * (maxIterations - 1)).foldLeft(seedWeights) { (weights, featureIndex) => {
 
-        val predictedLabel: BigDecimal = sigmoidFor(x = features(featureIndex), weights = weights)
-        val actualLabel: BigDecimal = labels(featureIndex)
+        val tempW = {
+          val idx = featureIndex%(features.size-1)
+          val predictedLabel: BigDecimal = sigmoidFor(x = features(idx), weights = weights)
 
-        val diff = (actualLabel - predictedLabel)
+          val actualLabel: BigDecimal = labels(idx)
 
-        weights.map(w => multiplyVectors(weights, features(featureIndex)).sum * diff)
+          val diff = (actualLabel - predictedLabel)
+
+          weights.map(w => multiplyVectors(weights, features(idx)).sum * diff)
+        }
+        val sw = sumVectors(weights, tempW)
+        sw
       }
       }
-    }
-    }
+
   }
 
   private def sigmoidFor(x: List[BigDecimal], weights: List[BigDecimal]): BigDecimal = {
