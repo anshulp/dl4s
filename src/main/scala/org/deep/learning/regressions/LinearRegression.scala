@@ -1,5 +1,7 @@
 package org.deep.learning.regressions
 
+import org.deep.learning.util.Prediction
+
 /***
   * Implement http://mathworld.wolfram.com/LeastSquaresFitting.html
   * Author - Anshul Pandey
@@ -48,7 +50,6 @@ class LinearRegression(
     val predictedY = a + b * x
     Prediction(predictedY, if (y == 0) y else y - predictedY)
   }
-
 }
 
-case class Prediction(prediction: BigDecimal, error: BigDecimal)
+
