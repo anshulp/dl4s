@@ -1,14 +1,19 @@
 package org.deep.learning.classifiers.neuralNetwork.activation
 
-class HyperbolicTanFunction extends ActivationFunction {
+class RectifierLinearUnitFunction extends ActivationFunction {
 
   def activate(value: BigDecimal): BigDecimal = {
-    math.tanh(value.doubleValue())
+    if (value > 0 )
+      value
+    else
+      0
   }
 
   def derivative(value: BigDecimal): BigDecimal = {
-    val tanhValue = math.tanh(value.doubleValue())
-    1 - (tanhValue * tanhValue)
+    if (value > 0)
+      1
+    else
+      0
   }
 
 }
