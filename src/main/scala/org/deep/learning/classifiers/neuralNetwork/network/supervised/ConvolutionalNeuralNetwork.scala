@@ -4,4 +4,5 @@ import org.deep.learning.classifiers.neuralNetwork.network.NeuralNetwork
 
 class ConvolutionalNeuralNetwork extends NeuralNetwork {
 
+  val output = List.empty
 }
