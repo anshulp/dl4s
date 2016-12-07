@@ -1,5 +1,4 @@
-package org.deep.learning.classifiers.neuralNetwork
-
+package org.deep.learning.neuralNetwork
 
 object Link {
 
