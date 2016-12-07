@@ -1,6 +1,7 @@
-package org.deep.learning.classifiers.neuralNetwork.network.supervised
+package org.deep.learning.neuralNetwork.network.supervised
 
 import org.deep.learning.classifiers.neuralNetwork.network.NeuralNetwork
+import org.deep.learning.neuralNetwork.network.NeuralNetwork
 
 class MultiLayerPerceptron extends NeuralNetwork {
 

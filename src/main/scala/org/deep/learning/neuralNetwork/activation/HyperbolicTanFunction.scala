@@ -1,4 +1,4 @@
-package org.deep.learning.classifiers.neuralNetwork.activation
+package org.deep.learning.neuralNetwork.activation
 
 class HyperbolicTanFunction extends ActivationFunction {
 

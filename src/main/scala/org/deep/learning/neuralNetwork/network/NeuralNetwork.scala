@@ -1,4 +1,4 @@
-package org.deep.learning.classifiers.neuralNetwork.network
+package org.deep.learning.neuralNetwork.network
 
 trait NeuralNetwork {
 

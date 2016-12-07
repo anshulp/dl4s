@@ -1,6 +1,7 @@
-package org.deep.learning.classifiers.neuralNetwork
+package org.deep.learning.neuralNetwork
 
 import org.deep.learning.classifiers.neuralNetwork.activation.ActivationFunction
+import org.deep.learning.neuralNetwork.activation.ActivationFunction
 
 object Neuron {
 
