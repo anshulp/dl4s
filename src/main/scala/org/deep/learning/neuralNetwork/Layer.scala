@@ -27,8 +27,8 @@ class Layer(
   activationFunction: ActivationFunction,
   inputValues: Option[List[BigDecimal]]) {
 
-  val neurons: List[Neuron] =
-    (0 to numberOfNeurons).map(i => Neuron(inputValues.get(i), RectifierLinearUnitFunction())).toList
+  lazy val neurons: List[Neuron] =
+    (0 to numberOfNeurons).map(i => Neuron(inputValues.get(i), activationFunction)).toList
 
   lazy val output: List[BigDecimal] = List.empty
 
