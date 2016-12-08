@@ -1,5 +1,10 @@
 package org.deep.learning.neuralNetwork.activation
 
+object RectifierLinearUnitFunction {
+
+  def apply(): RectifierLinearUnitFunction = new RectifierLinearUnitFunction()
+}
+
 class RectifierLinearUnitFunction extends ActivationFunction {
 
   def activate(value: BigDecimal): BigDecimal = {
