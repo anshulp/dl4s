@@ -1,6 +1,6 @@
 package org.deep.learning.neuralNetwork.activation
 
-class SigmoidActivation extends ActivationFunction {
+class SigmoidFunction extends ActivationFunction {
 
   def activate(value: BigDecimal): BigDecimal = {
     1 / (1 + math.exp(-1 * value.doubleValue()))

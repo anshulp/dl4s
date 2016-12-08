@@ -1,6 +1,5 @@
 package org.deep.learning.neuralNetwork
 
-import org.deep.learning.classifiers.neuralNetwork.activation.ActivationFunction
 import org.deep.learning.neuralNetwork.activation.ActivationFunction
 
 object Neuron {
@@ -18,8 +17,8 @@ class Neuron(
   val input: BigDecimal,
   activationFunction: ActivationFunction){
 
-  val output: List[BigDecimal] = List.empty // TODO: implement this, output vector for each weight
+  lazy val output: List[BigDecimal] = List.empty // TODO: implement this, output vector for each weight
 
-  val forwardLinks: List[Link] = List.empty // TODO: implement this
+  lazy val forwardLinks: List[Link] = List.empty // TODO: implement this
 
 }
