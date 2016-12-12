@@ -1,9 +1,6 @@
 package org.deep.learning.neuralNetwork.network.supervised
 
-import org.deep.learning.neuralNetwork.Layer
-import org.deep.learning.neuralNetwork.activation.RectifierLinearUnitFunction
 import org.scalatest.{FlatSpec, Matchers, OptionValues}
-import org.deep.learning.neuralNetwork.network.supervised.MultiLayerPerceptron
 
 class MultiLayerPerceptronSpec extends FlatSpec with Matchers with OptionValues {
 
@@ -11,17 +8,22 @@ class MultiLayerPerceptronSpec extends FlatSpec with Matchers with OptionValues 
 
   behavior of "MLP"
 
-  it should "create MLP with 2 layers, each layer consisting of 2 neurons" in {
-/*
-    val mlp = MultiLayerPerceptron(numberOfLayers, activationFunction, inputValues)
+  it should "create MLP with 3 layers, each layer consisting of 2 neurons" in {
 
-    mlp.add(List(l1, l2))
+    val mlp = MultiLayerPerceptron(3, 2, Some(inputValues))
+    val layers = mlp.layers
+    val output = mlp.output
 
-    mlp.train
-    mlp.persist
-    */
-    
-    true should be (true)
+    output should be (List(4, 4))
+  }
+
+  it should "create MLP with 4 layers, each layer consisting of 2 neurons" ignore {
+
+    val mlp = MultiLayerPerceptron(4, 2, Some(inputValues))
+    val layers = mlp.layers
+    val output = mlp.output
+
+    output should be (List(8, 8))
   }
 
 }
