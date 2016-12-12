@@ -8,7 +8,7 @@ object RectifierLinearUnitFunction {
 class RectifierLinearUnitFunction extends ActivationFunction {
 
   def activate(value: BigDecimal): BigDecimal = {
-    if (value > 0 )
+    if (value > 0)
       value
     else
       0
