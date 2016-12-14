@@ -2,9 +2,8 @@ package org.deep.learning.neuralNetwork.network.supervised
 
 import breeze.linalg.DenseMatrix
 import org.deep.learning.neuralNetwork.network.NeuralNetwork
-import org.deep.learning.neuralNetwork.Layer
 import org.deep.learning.neuralNetwork.activation.RectifierLinearUnitFunction
-import org.deep.learning.neuralNetwork.network.supervised.MultiLayerPerceptron._
+import MultiLayerPerceptron._
 
 object MultiLayerPerceptron {
 
@@ -29,29 +28,12 @@ class MultiLayerPerceptron(
   mapOfWeightMatrices: Map[Int, DenseMatrix[Double]],
   inputFeatureValues: Option[List[BigDecimal]]) extends NeuralNetwork {
 
-  private val inputLayer: Layer = Layer(
-    layerId = 0,
-    numberOfNeurons = numberOfNeuronsPerLayer,
-    activationFunction = ReLU,
-    inputFeatureValues = inputFeatureValues)
-
-  // TODO: make this val - cyclic datastructure
-  private var tempLayer = inputLayer
-
-  val tempLayers = for {
-    layerId <- 1 to numberOfLayers-1
-  } yield {
-    val layer = Layer(
-      layerId = layerId,
-      numberOfNeurons = numberOfNeuronsPerLayer,
-      activationFunction = ReLU,
-      weightMatrix = Some(mapOfWeightMatrices(layerId)),
-      previousLayer = Some(tempLayer))
-    tempLayer = layer
-    layer
-  }
-
-  val layers = List(inputLayer) ++ tempLayers.toList
+  val layers = getLayers(
+    numberOfLayers = numberOfLayers,
+    numberOfNeuronsPerLayer = numberOfNeuronsPerLayer,
+    mapOfWeightMatrices = mapOfWeightMatrices,
+    inputFeatureValues = inputFeatureValues,
+    activationFunction = ReLU)
 
   lazy val output = layers.last.output
 
