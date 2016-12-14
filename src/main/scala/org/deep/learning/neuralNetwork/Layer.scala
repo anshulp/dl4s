@@ -1,66 +1,70 @@
 package org.deep.learning.neuralNetwork
 
-import org.deep.learning.neuralNetwork.activation.{ActivationFunction, RectifierLinearUnitFunction}
+import org.deep.learning.neuralNetwork.activation.ActivationFunction
+import breeze.linalg.DenseMatrix
 
 object Layer {
 
-  /***
-    *
-    * @param numberOfNeurons
-    * @param activationFunction - What activationFunction to use when Neuron calculates the output
-    * @param inputValues - inputVector feeding into this layer. This is basically a matrix, i.e. a vector input for each neuron.
-    *                    The matrix size should be - previousLayerNeurons x numberOfNeurons
-    */
-  /***
-    *
-    * @param layerId - layerId, for debugging purposes
-    * @param numberOfNeurons - numberOfNeurons in this layer
-    * @param activationFunction - What activationFunction to use when Neuron calculates the output
-    * @param previousLayer - previous layer in the sequence
-    * @param inputValues - inputVector feeding into this layer. This would be features for Ist layer and output of previousLayer for hidden + output layers
-    * @return
-    */
   def apply(
     layerId: Int,
     numberOfNeurons: Int,
     activationFunction: ActivationFunction,
     previousLayer: Option[Layer] = None,
-    inputValues: Option[List[BigDecimal]] = None): Layer = {
+    weightMatrix: Option[DenseMatrix[Double]] = None,
+    inputFeatureValues: Option[List[BigDecimal]] = None): Layer = {
 
     assert(numberOfNeurons > 0, "Number of neurons in the layer cannot be less than one.")
     assert(activationFunction != null, "ActivationFunction should not be null.")
+    assert({
+      !(previousLayer.isEmpty && weightMatrix.nonEmpty) &&
+        !(previousLayer.nonEmpty && weightMatrix.isEmpty)
+    }, "if previousLayer is none, weight matrix should also be none.")
 
-    if (inputValues.isDefined)
-      assert(numberOfNeurons == inputValues.get.size, "Input vector should be of the same size as numberOfNeurons in the layer.")
+    if (inputFeatureValues.isDefined)
+      assert(numberOfNeurons == inputFeatureValues.get.size, "Input vector should be of the same size as numberOfNeurons in the layer.")
 
     new Layer(
       layerId = layerId,
       numberOfNeurons = numberOfNeurons,
-      inputValues = inputValues,
+      inputFeatureValues = inputFeatureValues,
       previousLayer = previousLayer,
+      weightMatrix = weightMatrix,
       activationFunction = activationFunction)
   }
 }
 
 class Layer(
-  val layerId: Int,
-  val numberOfNeurons: Int,
-  val activationFunction: ActivationFunction,
-  val previousLayer: Option[Layer],
-  val inputValues: Option[List[BigDecimal]]) {
+  layerId: Int,
+  numberOfNeurons: Int,
+  activationFunction: ActivationFunction,
+  previousLayer: Option[Layer],
+  weightMatrix: Option[DenseMatrix[Double]],
+  inputFeatureValues: Option[List[BigDecimal]]) {
 
   // TODO: Need to introduce weights in here
-  private lazy val sumOfValuesFromPreviousLayersNeurons: BigDecimal =
-    previousLayer.map(_.output.sum).getOrElse(0)
+  private lazy val inputValuesFromPreviousLayersNeurons: List[BigDecimal] = {
+    if (previousLayer.isDefined && weightMatrix.isDefined) {
+      val previousLayerNeurons = previousLayer.get.neurons
+      (0 to numberOfNeurons-1).map(currentNeuronIndex => {
+        (0 to previousLayerNeurons.size-1).map(previousNeuronIndex =>
+          previousLayerNeurons(previousNeuronIndex).output * weightMatrix.get.valueAt(previousNeuronIndex, currentNeuronIndex)).sum
+      }).toList
+    }
+    else
+      List.fill(0)(numberOfNeurons)
+  }
 
-  // if inputValues are defined, i.e. for Ist layer then use it, else compute it from previous layer
-  private lazy val inputToThisLayer: List[BigDecimal] =
-    inputValues.filterNot(_.isEmpty).getOrElse(List.fill(numberOfNeurons)(sumOfValuesFromPreviousLayersNeurons))
+  // if inputFeatureValues are defined, i.e. for Ist layer then use it, else compute it from previous layer
+  private def input(neuronIndex: Int): BigDecimal =
+    inputFeatureValues.filterNot(_.isEmpty).getOrElse(inputValuesFromPreviousLayersNeurons)(neuronIndex)
 
   // Build layer of Neurons
   // TODO - Add a bias neuron
   lazy val neurons: List[Neuron] =
-    (0 to numberOfNeurons-1).map(i => Neuron(inputToThisLayer(i), activationFunction)).toList
+    (0 to numberOfNeurons-1).map(index =>
+      Neuron(
+        input = input(index),
+        activationFunction = activationFunction)).toList
 
-  lazy val output: List[BigDecimal] = neurons.map.(_.output)
+  lazy val output: List[BigDecimal] = neurons.map(_.output)
 }

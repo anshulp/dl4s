@@ -1,5 +1,6 @@
 package org.deep.learning.neuralNetwork.network.supervised
 
+import breeze.linalg.DenseMatrix
 import org.deep.learning.neuralNetwork.network.NeuralNetwork
 import org.deep.learning.neuralNetwork.Layer
 import org.deep.learning.neuralNetwork.activation.RectifierLinearUnitFunction
@@ -12,31 +13,40 @@ object MultiLayerPerceptron {
   def apply(
     numberOfLayers: Int,
     numberOfNeuronsPerLayer: Int,
-    inputValues: Option[List[BigDecimal]] = None): MultiLayerPerceptron =
+    mapOfWeightMatrices: Map[Int, DenseMatrix[Double]],
+    inputFeatureValues: Option[List[BigDecimal]] = None): MultiLayerPerceptron =
+
       new MultiLayerPerceptron(
         numberOfLayers = numberOfLayers,
         numberOfNeuronsPerLayer = numberOfNeuronsPerLayer,
-        inputValues = inputValues)
+        mapOfWeightMatrices = mapOfWeightMatrices,
+        inputFeatureValues = inputFeatureValues)
 }
 
 class MultiLayerPerceptron(
   numberOfLayers: Int,
   numberOfNeuronsPerLayer: Int,
-  inputValues: Option[List[BigDecimal]]) extends NeuralNetwork {
+  mapOfWeightMatrices: Map[Int, DenseMatrix[Double]],
+  inputFeatureValues: Option[List[BigDecimal]]) extends NeuralNetwork {
 
   private val inputLayer: Layer = Layer(
     layerId = 0,
     numberOfNeurons = numberOfNeuronsPerLayer,
     activationFunction = ReLU,
-    inputValues = inputValues)
+    inputFeatureValues = inputFeatureValues)
 
   // TODO: make this val - cyclic datastructure
-  var tempLayer = inputLayer
+  private var tempLayer = inputLayer
 
   val tempLayers = for {
     layerId <- 1 to numberOfLayers-1
   } yield {
-    val layer = Layer(layerId = layerId, numberOfNeurons = numberOfNeuronsPerLayer, activationFunction = ReLU, previousLayer = Some(tempLayer))
+    val layer = Layer(
+      layerId = layerId,
+      numberOfNeurons = numberOfNeuronsPerLayer,
+      activationFunction = ReLU,
+      weightMatrix = Some(mapOfWeightMatrices(layerId)),
+      previousLayer = Some(tempLayer))
     tempLayer = layer
     layer
   }
