@@ -46,9 +46,8 @@ class Layer(
     if (previousLayer.isDefined && weightMatrix.isDefined) {
       val previousLayerNeurons = previousLayer.get.neurons
       (0 to numberOfNeurons-1).map(currentNeuronIndex => {
-        val l = (0 to previousLayerNeurons.size-1).map(previousNeuronIndex =>
-          previousLayerNeurons(previousNeuronIndex).output * weightMatrix.get.valueAt(previousNeuronIndex, currentNeuronIndex))
-        l.sum
+        (0 to previousLayerNeurons.size-1).map(previousNeuronIndex =>
+          previousLayerNeurons(previousNeuronIndex).output * weightMatrix.get.valueAt(previousNeuronIndex, currentNeuronIndex)).sum
       }).toList
     }
     else
